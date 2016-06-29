@@ -31,6 +31,7 @@ module KitchenAcceptance
     property :artifactory_password, String, default: lazy { ENV["ARTIFACTORY_PASSWORD"] ? ENV["ARTIFACTORY_PASSWORD"] : "" }
     property :env, Hash, default: {}
     property :kitchen_options, String, default: lazy { ENV["PROJECT_NAME"] ? "-c -l debug" : "-c" }
+    property :kitchen_log_path, String, default: lazy { ENV["WORKSPACE"] ? "#{ENV["WORKSPACE"]}/chef-acceptance-data/logs" : "#{kitchen_dir}/../.acceptance_data/logs/kitchen" }
 
     action :run do
       execute "bundle exec kitchen #{command}#{instances ? " #{instances}" : ""}#{kitchen_options ? " #{kitchen_options}" : ""}" do
@@ -45,6 +46,13 @@ module KitchenAcceptance
           "ARTIFACTORY_USERNAME" => artifactory_username,
           "ARTIFACTORY_PASSWORD" => artifactory_password
         }.merge(new_resource.env))
+      end
+      ruby_block "copy_kitchen_logs_to_data_path" do
+        block do
+          suite = kitchen_dir.split("/").last
+          FileUtils.mkdir_p("#{kitchen_log_path}/#{suite}")
+          FileUtils.cp_r("#{kitchen_dir}/.kitchen/logs/", "#{kitchen_log_path}/#{suite}")
+        end
       end
     end
   end
