@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "omnibus", git: "https://github.com/omniti-labs/omnibus.git", branch: "fixes/omnios"
+gem "omnibus", git: "https://github.com/omniti-labs/omnibus.git", branch: "fixes/ips-naming"
 gem "omnibus-software", git: "https://github.com/omniti-labs/omnibus-software.git", branch: "fixes/omnios"
 
 # pedump pessimistically pins multipart-post to a version from 2013 which makes
