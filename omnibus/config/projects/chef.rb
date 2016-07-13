@@ -35,6 +35,14 @@ if windows?
   #       which is only fixable if everyone in the world fixes their Makefiles
   install_dir  "#{default_root}/opscode/#{name}"
   package_name "chef-client"
+elsif omnios?
+  install_dir            "/opt/chef"
+  package_name           "chef-12"
+
+  package :ips do
+    publisher_prefix  "ms.omniti.com"
+    package_namespace "omniti/system/management"
+  end
 else
   install_dir "#{default_root}/#{name}"
 end
